@@ -9,8 +9,6 @@ public:
     MyQTable();
     ~MyQTable();
 
-    //int get_index(int in_goal, int pip, int unprotected, int threat, int best_opp, int second_opp);
-
     long double get_value(int state, int action);
     void set_value(int state, int action, long double value);
 
@@ -21,14 +19,8 @@ public:
 
     long double get_reward(int state);
 
-
-    //void record_visit(int index);
-    //void report_visits();
-    //void report_usage();
-
     void copy_values_to(MyQTable& destination);
     double difference(MyQTable& other_table);
-
 
     void print_q_table();
 

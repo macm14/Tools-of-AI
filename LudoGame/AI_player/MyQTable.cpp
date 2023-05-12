@@ -96,16 +96,7 @@ bool MyQTable::load(const string& name)
             q_table[i][j] = num;
         }
     }
-    //for (int i = 0; i < STATES; i++)
-    //{
-    //    myfile >> num;
-    //    q_table[i] = num;
-    //}
     myfile.close();
-
-   /* if (q_table[WON_STATE] != 1.0)
-        throw exception();*/
-
     return true;
 }
 
@@ -113,111 +104,6 @@ long double MyQTable::get_reward(int state)
 {
     return reward_table[state];
 }
-
-//void MyQTable::record_visit(int index)
-//{
-//    usage_table[index]++;
-//    total_visits++;
-//}
-
-//void MyQTable::report_visits()
-//{
-//    int one_time = 0;
-//    int two_times = 0;
-//    int teen_times = 0;
-//    for (int i = 0; i < STATE_COUNT; i++)
-//    {
-//        if (usage_table[i] >= 1)  one_time++;
-//        if (usage_table[i] >= 2)  two_times++;
-//        if (usage_table[i] >= 10) teen_times++;
-//    }
-//
-//    std::cout << one_time << "; " << two_times << "; " << teen_times << "; " << total_visits << std::endl;
-//}
-
-//void MyQTable::report_usage()
-//{
-//    int no_visit = 0;
-//
-//    int unused_goal[4] = { 0 };
-//    int unused_pip[10] = { 0 };
-//    int unused_unprotected[8] = { 0 };
-//    int unused_threat[4] = { 0 };
-//    int unused_best_opp[9] = { 0 };
-//    int unused_second_opp[8] = { 0 };
-//
-//    int goal_pip[4][10] = { 0 };
-//
-//    for (int i = 0; i < STATE_COUNT; i++)
-//    {
-//        if (usage_table[i] == 0)
-//        {
-//            no_visit++;
-//            int state = i;
-//            int in_goal = state / GOAL_OFFSET;
-//            state -= in_goal * GOAL_OFFSET;
-//            int pip = state / PIP_OFFSET;
-//            state -= pip * PIP_OFFSET;
-//            int unprotected = state / UNPROTECTED_OFFSET;
-//            state -= unprotected * UNPROTECTED_OFFSET;
-//            int threat = state / THREAT_OFFSET;
-//            state -= threat * THREAT_OFFSET;
-//            int best_opp = state / BEST_OPP_OFFSET;
-//            state -= best_opp * BEST_OPP_OFFSET;
-//            int second_opp = state;
-//
-//            unused_goal[in_goal]++;
-//            unused_pip[pip]++;
-//            unused_unprotected[unprotected]++;
-//            unused_threat[threat]++;
-//            unused_best_opp[best_opp]++;
-//            unused_second_opp[second_opp]++;
-//
-//            goal_pip[in_goal][pip]++;
-//        }
-//    }
-//
-//    std::cout << no_visit << " states was never visited" << std::endl;
-//
-//    std::cout << "unused_goal ";
-//    for (int i = 0; i < 4; i++)
-//        std::cout << unused_goal[i] << ", ";
-//    std::cout << std::endl;
-//
-//    std::cout << "unused_pip ";
-//    for (int i = 0; i < 10; i++)
-//        std::cout << unused_pip[i] << ", ";
-//    std::cout << std::endl;
-//
-//    std::cout << "unused_unprotected ";
-//    for (int i = 0; i < 8; i++)
-//        std::cout << unused_unprotected[i] << ", ";
-//    std::cout << std::endl;
-//
-//    std::cout << "unused_threat ";
-//    for (int i = 0; i < 4; i++)
-//        std::cout << unused_threat[i] << ", ";
-//    std::cout << std::endl;
-//
-//    std::cout << "unused_best_opp ";
-//    for (int i = 0; i < 9; i++)
-//        std::cout << unused_best_opp[i] << ", ";
-//    std::cout << std::endl;
-//
-//    std::cout << "unused_second_opp ";
-//    for (int i = 0; i < 8; i++)
-//        std::cout << unused_second_opp[i] << ", ";
-//    std::cout << std::endl;
-//
-//    //    std::cout << "goal_pip: " << std::endl;
-//    //    for(int i = 0; i < 4; i++)
-//    //    {
-//    //        for(int j = 0; j < 10; j++)
-//    //            std::cout << goal_pip[i][j] << ", ";
-//    //            std::cout << std::endl;
-//    //    }
-//    //    std::cout << std::endl;
-//}
 
 void MyQTable::copy_values_to(MyQTable& destination)
 {
@@ -228,11 +114,6 @@ void MyQTable::copy_values_to(MyQTable& destination)
             destination.q_table[i][j] = this->q_table[i][j];
         }
     }
-
-    //for (int i = 0; i < STATES; i++)
-    //    destination.q_table[i] = this->q_table[i];
-
-    //destination.q_table[WON_STATE] = 1.0;
 }
 
 double MyQTable::difference(MyQTable& other_table)
@@ -246,9 +127,6 @@ double MyQTable::difference(MyQTable& other_table)
             dif += abs(other_table.q_table[i][j] - this->q_table[i][j]);
         }
     }
-    /*for (int i = 0; i < STATE_COUNT; i++)
-        dif += abs(other_table.q_table[i] - this->q_table[i]);*/
-
     return dif;
 }
 

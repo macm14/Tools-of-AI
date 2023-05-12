@@ -44,11 +44,6 @@ int MyAiPlayer::make_decision()
         post_move_learning(calculate_state(position[moved_pin]),
                            calculate_state(post_move_position[moved_pin]),
                                                 calculate_action(moved_pin));
-
-        //std::cout << " state: " << calculate_state(position[moved_pin]) << std::endl;
-        //std::cout << " nex state: " << calculate_state(post_move_position[moved_pin]) << std::endl;
-
-        //std::cout << " 1 chosen piece: " << valid_moves[0] << std::endl << std::endl;
         return valid_moves[0];
     }
 
@@ -64,18 +59,13 @@ int MyAiPlayer::make_decision()
     
     for (int i = 0; i < valid_count; i++) {
         int piece = valid_moves[i];
-        //std::cout << "moving piece: " << piece << std::endl;
-
         calc_post_move_position(piece);
 
         current_states[piece] = calculate_state(position[piece]);
         possible_states[piece] = calculate_state(post_move_position[piece]);
         possible_actions[piece] = calculate_action(piece);
 
-        //std::cout << " cur state: " << current_states[piece] << std::endl;
-        //std::cout << " nex state: " << possible_states[piece] << std::endl;
         q_value = q_table->get_value(current_states[piece], possible_actions[piece]);
-        //std::cout << "  q_val: " << q_value << "  " << std::endl;
 
         if (q_value > max_q_value)
         {
@@ -95,11 +85,9 @@ int MyAiPlayer::make_decision()
         throw std::exception();
     }
     if (max_count == 1) {
-
         calc_post_move_position(moving_piece[0]);
-
-        post_move_learning(current_states[moving_piece[0]], possible_states[moving_piece[0]], possible_actions[moving_piece[0]]);
-        
+        post_move_learning(current_states[moving_piece[0]], possible_states[moving_piece[0]],
+                           possible_actions[moving_piece[0]]);
         return moving_piece[0];
     }
 
@@ -219,10 +207,6 @@ int MyAiPlayer::calculate_action(int move_piece)
     if (next_possible_square == 99)
         return MyQTable::IN_GOAL;
     else if (is_star(next_possible_square)) {
-        //std::cout << "pin: " << move_piece << "  NEXT SQ: " << next_possible_square << "   OPPONENTS NEXT SQ : " << count_opponents(next_possible_square) << std::endl;
-        //for (int j = 0; j < 16; j++) {
-        //    std::cout << "PIN: " << j << "   POSITION: " << position[j] << "  POST MOVE: " << post_move_position[j] << std::endl;
-        //}
         return MyQTable::STAR;
     }
     else if (next_possible_square > 50 && next_possible_square < 56) {
@@ -286,8 +270,6 @@ void MyAiPlayer::post_move_learning(int current_state, int next_state, int actio
 
     q_table->set_value(current_state, action_performed, q_table->get_value(current_state,
                                                                          action_performed) + delta_q);
-
-    long double q_after = q_table->get_value(current_state, action_performed);
 }
 
 void MyAiPlayer::print_table()
