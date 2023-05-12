@@ -8,7 +8,7 @@ class MyAiPlayer : public iplayer
 public:
 	MyAiPlayer();
 	MyAiPlayer(long double _alpha, long double _gamma);
-	MyQTable q_table;
+	MyQTable* q_table;
 
 	void print_table();
     ~MyAiPlayer();

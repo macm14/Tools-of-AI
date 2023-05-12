@@ -4,7 +4,7 @@ MyAiPlayer::MyAiPlayer()
 {
 	alpha = 0.5;
 	gamma = 0.5;
-    q_table = MyQTable();
+    q_table = new MyQTable();
     post_move_position = new int[16];
 }
 
@@ -12,7 +12,7 @@ MyAiPlayer::MyAiPlayer(long double _alpha, long double _gamma)
 {
 	alpha = _alpha;
 	gamma = _gamma;
-    q_table = MyQTable();
+    q_table = new MyQTable();
     post_move_position = new int[16];
 }
 
@@ -54,9 +54,9 @@ int MyAiPlayer::make_decision()
 
     long double max_q_value = -1.0;
 
-    int* current_states = new int [valid_count];
-    int* possible_states = new int[valid_count];
-    int* possible_actions = new int[valid_count];
+    int current_states[valid_count];
+    int possible_states[valid_count];
+    int possible_actions[valid_count];
 
     long double q_value = -1.0;
     int max_count = 0;
@@ -74,7 +74,7 @@ int MyAiPlayer::make_decision()
 
         //std::cout << " cur state: " << current_states[piece] << std::endl;
         //std::cout << " nex state: " << possible_states[piece] << std::endl;
-        q_value = q_table.get_value(current_states[piece], possible_actions[piece]);
+        q_value = q_table->get_value(current_states[piece], possible_actions[piece]);
         //std::cout << "  q_val: " << q_value << "  " << std::endl;
 
         if (q_value > max_q_value)
@@ -99,10 +99,7 @@ int MyAiPlayer::make_decision()
         calc_post_move_position(moving_piece[0]);
 
         post_move_learning(current_states[moving_piece[0]], possible_states[moving_piece[0]], possible_actions[moving_piece[0]]);
-
-        delete[] current_states;
-        delete[] possible_states;
-        delete[] possible_actions;
+        
         return moving_piece[0];
     }
 
@@ -113,9 +110,6 @@ int MyAiPlayer::make_decision()
     post_move_learning(current_states[moving_piece[random_number]], 
         possible_states[moving_piece[random_number]], possible_actions[moving_piece[random_number]]);
 
-    delete[] current_states;
-    delete[] possible_states;
-    delete[] possible_actions;
     return moving_piece[random_number];
 
 }
@@ -287,34 +281,21 @@ int MyAiPlayer::is_star(int square) const
 
 void MyAiPlayer::post_move_learning(int current_state, int next_state, int action_performed)
 {
-    //std::cout << "learnig!   ";
-    long double q_before = q_table.get_value(current_state, action_performed);
-    long double delta_q = alpha * (q_table.get_reward(action_performed) + gamma * q_table.get_max_q(next_state)
-        - q_table.get_value(current_state, action_performed));
+    long double delta_q = alpha * (q_table->get_reward(action_performed) + gamma * q_table->get_max_q(next_state)
+        - q_table->get_value(current_state, action_performed));
 
-    //std::cout << "CURR STATE: " << current_state << "  NEXT STATE: " << next_state << "   ACTION: " << action_performed
-    //    << "  DELTAQ: " << delta_q << std::endl;
-
-
-    //std::cout << "r= " << q_table.get_reward(action_performed) << "  maxQ= " << q_table.get_max_q(next_state)
-    //    << "  Q= " << q_table.get_value(current_state, action_performed) << std::endl;
-
-    //std::cout << " maxQ= " << q_table.get_max_q(next_state) << std::endl;
-    q_table.set_value(current_state, action_performed, q_table.get_value(current_state,
+    q_table->set_value(current_state, action_performed, q_table->get_value(current_state,
                                                                          action_performed) + delta_q);
 
-    long double q_after = q_table.get_value(current_state, action_performed);
-
-    //std::cout << "Q BEFORE= " << q_before << "  Q AFTER= " << q_after << std::endl << std::endl;
-
-    //print_table();
+    long double q_after = q_table->get_value(current_state, action_performed);
 }
 
 void MyAiPlayer::print_table()
 {
-    q_table.print_q_table();
+    q_table->print_q_table();
 }
 
 MyAiPlayer::~MyAiPlayer() {
     delete[] post_move_position;
+    delete q_table;
 }
